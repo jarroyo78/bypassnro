@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <unattend xmlns="urn:schemas-microsoft-com:unattend" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
-	<!--https://schneegans.de/windows/unattend-generator/?LanguageMode=Interactive&ProcessorArchitecture=amd64&ComputerNameMode=Random&CompactOsMode=Default&TimeZoneMode=Implicit&PartitionMode=Interactive&DiskAssertionMode=Skip&WindowsEditionMode=Firmware&InstallFromMode=Automatic&PEMode=Default&UserAccountMode=Unattended&AccountName0=Admin&AccountDisplayName0=&AccountPassword0=&AccountGroup0=Administrators&AccountName1=User&AccountDisplayName1=&AccountPassword1=&AccountGroup1=Users&AutoLogonMode=Own&PasswordExpirationMode=Unlimited&LockoutMode=Default&HideFiles=Hidden&TaskbarSearch=Hide&TaskbarIconsMode=Default&DisableWidgets=true&LeftTaskbar=true&HideTaskViewButton=true&DisableBingResults=true&StartTilesMode=Default&StartPinsMode=Empty&EnableLongPaths=true&DeleteWindowsOld=true&EffectsMode=Default&DesktopIconsMode=Default&StartFoldersMode=Default&WifiMode=Skip&ExpressSettings=DisableAll&LockKeysMode=Skip&StickyKeysMode=Default&ColorMode=Default&WallpaperMode=Default&LockScreenMode=Default&Remove3DViewer=true&RemoveBingSearch=true&RemoveCamera=true&RemoveClipchamp=true&RemoveCopilot=true&RemoveCortana=true&RemoveDevHome=true&RemoveWindowsHello=true&RemoveFamily=true&RemoveFeedbackHub=true&RemoveGameAssist=true&RemoveGetHelp=true&RemoveHandwriting=true&RemoveInternetExplorer=true&RemoveMailCalendar=true&RemoveMaps=true&RemoveMathInputPanel=true&RemoveMediaFeatures=true&RemoveMixedReality=true&RemoveZuneVideo=true&RemoveNews=true&RemoveNotepad=true&RemoveOffice365=true&RemoveOneDrive=true&RemoveOneNote=true&RemoveOneSync=true&RemoveOpenSSHClient=true&RemoveOutlook=true&RemovePaint3D=true&RemovePeople=true&RemovePhotos=true&RemovePowerAutomate=true&RemovePowerShell2=true&RemovePowerShellISE=true&RemoveQuickAssist=true&RemoveRecall=true&RemoveRdpClient=true&RemoveSkype=true&RemoveSolitaire=true&RemoveSpeech=true&RemoveStepsRecorder=true&RemoveStickyNotes=true&RemoveTeams=true&RemoveGetStarted=true&RemoveToDo=true&RemoveVoiceRecorder=true&RemoveWallet=true&RemoveWeather=true&RemoveFaxAndScan=true&RemoveWindowsMediaPlayer=true&RemoveZuneMusic=true&RemoveWordPad=true&RemoveXboxApps=true&WdacMode=Skip-->
 	<settings pass="offlineServicing"></settings>
 	<settings pass="windowsPE">
 		<component name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
@@ -48,31 +47,22 @@
 			<UserAccounts>
 				<LocalAccounts>
 					<LocalAccount wcm:action="add">
-						<Name>Admin</Name>
-						<DisplayName></DisplayName>
+						<Name>User</Name>
+						<DisplayName>User</DisplayName>
 						<Group>Administrators</Group>
 						<Password>
-							<Value></Value>
-							<PlainText>true</PlainText>
-						</Password>
-					</LocalAccount>
-					<LocalAccount wcm:action="add">
-						<Name>User</Name>
-						<DisplayName></DisplayName>
-						<Group>Users</Group>
-						<Password>
-							<Value></Value>
+							<Value>123456</Value>
 							<PlainText>true</PlainText>
 						</Password>
 					</LocalAccount>
 				</LocalAccounts>
 			</UserAccounts>
 			<AutoLogon>
-				<Username>Admin</Username>
+				<Username>User</Username>
 				<Enabled>true</Enabled>
 				<LogonCount>1</LogonCount>
 				<Password>
-					<Value></Value>
+					<Value>123456</Value>
 					<PlainText>true</PlainText>
 				</Password>
 			</AutoLogon>
@@ -112,7 +102,6 @@ foreach( $file in $Document.unattend.Extensions.File ) {
 $selectors = @(
 	'Microsoft.Microsoft3DViewer';
 	'Microsoft.BingSearch';
-	'Microsoft.WindowsCamera';
 	'Clipchamp.Clipchamp';
 	'Microsoft.549981C3F5F10';
 	'Microsoft.Windows.DevHome';
@@ -125,18 +114,14 @@ $selectors = @(
 	'Microsoft.WindowsMaps';
 	'Microsoft.MixedReality.Portal';
 	'Microsoft.BingNews';
-	'Microsoft.WindowsNotepad';
 	'Microsoft.MicrosoftOfficeHub';
 	'Microsoft.Office.OneNote';
 	'Microsoft.OutlookForWindows';
-	'Microsoft.MSPaint';
 	'Microsoft.People';
-	'Microsoft.Windows.Photos';
 	'Microsoft.PowerAutomateDesktop';
 	'MicrosoftCorporationII.QuickAssist';
 	'Microsoft.SkypeApp';
 	'Microsoft.MicrosoftSolitaireCollection';
-	'Microsoft.MicrosoftStickyNotes';
 	'MicrosoftTeams';
 	'MSTeams';
 	'Microsoft.Todos';
@@ -201,7 +186,6 @@ $selectors = @(
 	'MathRecognizer';
 	'OneCoreUAP.OneSync';
 	'OpenSSH.Client';
-	'Microsoft.Windows.PowerShell.ISE';
 	'App.Support.QuickAssist';
 	'Language.Speech';
 	'Language.TextToSpeech';
@@ -209,8 +193,6 @@ $selectors = @(
 	'Hello.Face.18967';
 	'Hello.Face.Migration.18967';
 	'Hello.Face.20134';
-	'Media.WindowsMediaPlayer';
-	'Microsoft.Windows.WordPad';
 );
 $getCommand = {
   Get-WindowsCapability -Online | Where-Object -Property 'State' -NotIn -Value @(
@@ -257,9 +239,6 @@ $logfile = 'C:\Windows\Setup\Scripts\RemoveCapabilities.log';
 		</File>
 		<File path="C:\Windows\Setup\Scripts\RemoveFeatures.ps1">
 $selectors = @(
-	'MediaPlayback';
-	'MicrosoftWindowsPowerShellV2Root';
-	'Microsoft-RemoteDesktopConnection';
 	'Recall';
 );
 $getCommand = {
@@ -429,9 +408,6 @@ $scripts = @(
 	};
 	{
 		Remove-ItemProperty -LiteralPath 'Registry::HKU\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'OneDriveSetup' -Force -ErrorAction 'Continue';
-	};
-	{
-		reg.exe add "HKU\DefaultUser\Software\Microsoft\Windows\CurrentVersion\GameDVR" /v AppCaptureEnabled /t REG_DWORD /d 0 /f;
 	};
 	{
 		reg.exe add "HKU\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v ShowTaskViewButton /t REG_DWORD /d 0 /f;
